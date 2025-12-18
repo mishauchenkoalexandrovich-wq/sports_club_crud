@@ -1,23 +1,46 @@
-# Sports Club CRUD
+# Sports Club CRUD (PHP + PDO + Docker)
 
-##  Призначення
-CRUD‑система для роботи з базою даних спортивного клубу.  
-Реалізація на PHP з використанням **PDO** та **prepared statements** для безпечної взаємодії з БД.
+##  Опис
+Веб‑застосунок для управління спортивним клубом. Реалізовано повний набір CRUD‑операцій для сутностей:
+- **Members** (учасники)
+- **Trainers** (тренери)
+- **Sessions** (тренування, з прив’язкою до тренера)
+- **Member_sessions** (зв’язки учасників із тренуваннями)
+
+Проєкт працює у Docker‑середовищі з використанням:
+- **PHP (PDO)** — логіка CRUD
+- **MySQL** — база даних
+- **Nginx** — веб‑сервер
+- **phpMyAdmin** — графічний інтерфейс для роботи з БД
+
+---
 
 ##  Структура проєкту
-- `public/` — роутінг та точка входу (`index.php`)
-- `src/` — логіка, DAO, клас `DB.php`
-- `views/` — HTML‑шаблони для відображення CRUD‑операцій
+- `public/` — роутінг та точка входу
+- `src/` — DAO‑класи (робота з БД)
+- `views/` — HTML‑шаблони CRUD‑операцій
 - `.nginx/` — конфігурація веб‑сервера
-- `docker-compose.yml` — опис контейнерів (PHP, Nginx, MySQL)
-- `.env.example` — приклад змінних середовища
-- `app.sql` — SQL‑дамп для ініціалізації БД
+- `docker-compose.yml` — опис контейнерів
+- `app.sql` — дамп БД
+- `README.md` — документація
 
-##  Запуск
-1. Скопіювати `.env.example` у `.env` та налаштувати параметри:
-   ```ini
-   DB_HOST=db
-   DB_PORT=3306
-   DB_NAME=app
-   DB_USER=root
-   DB_PASS=root
+---
+
+##  Модель даних
+- **Members**: `id`, `name`, `age`, `email`
+- **Trainers**: `id`, `name`, `specialization`
+- **Sessions**: `id`, `title`, `date`, `trainer_id`
+- **Member_sessions**: `id`, `member_id`, `session_id`
+
+Зв’язки:
+- `sessions.trainer_id → trainers.id` (багато тренувань до одного тренера)
+- `member_sessions.member_id → members.id`
+- `member_sessions.session_id → sessions.id` (зв’язок many‑to‑many)
+
+---
+
+##  Запуск через Docker
+1. Клонувати репозиторій:
+   ```bash
+   git clone https://github.com/<твій-репозиторій>.git
+   cd sports_club_crud
